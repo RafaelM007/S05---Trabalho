@@ -66,7 +66,7 @@
 
 <!-- INSCRIÇÃO -->
 <section class="scr" id="s1">
-  <div class="bar"><button class="back" onclick="go('det')" aria-label="Voltar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M15 5l-7 7 7 7"/></svg></button>Inscrição</div>
+  <div class="bar"><button class="back" onclick="go(nespBack)" aria-label="Voltar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M15 5l-7 7 7 7"/></svg></button>Inscrição</div>
   <div class="body"><div class="wgrid">
     <div class="ws"><div class="wz"><div class="a"><i>1</i>Dados</div><div><i>2</i>Documentos</div><div><i>3</i>Confirmar</div></div></div>
     <aside class="wa minis"></aside>
@@ -103,6 +103,12 @@
       <div class="sum" id="sum"></div>
       <label class="ck"><input type="checkbox" id="c3" onchange="b3.disabled=!this.checked">Li e concordo com as regras do edital</label></div></div></div>
   <div class="foot"><div class="row"><button class="btn o" onclick="go('s2')">Voltar</button><button class="btn" id="b3" disabled onclick="confirmar()">Confirmar inscrição</button></div></div>
+</section>
+
+<!-- DETALHES DA INSCRIÇÃO -->
+<section class="scr" id="insd">
+  <div class="bar"><button class="back" onclick="tab='i';go('explore')" aria-label="Voltar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M15 5l-7 7 7 7"/></svg></button>Detalhes da inscrição</div>
+  <div class="body" id="insd-body"></div>
 </section>
 
 <!-- FALAR COM O NESP -->

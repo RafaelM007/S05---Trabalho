@@ -35,10 +35,10 @@ const P=[{id:1,pais:'Alemanha',nome:'Jade University',inst:'Jade University of A
  {id:6,pais:'Argentina',nome:'Universidade de Córdoba',inst:'Universidade Nacional de Córdoba',tipo:'Convênio bilateral',area:'Engenharia',per:'março a julho de 2027',m:5,dur:'5 meses',prazo:'21/09',aberto:false,lang:['Espanhol'],idioma:'Espanhol',g:'g6',sig:'ARG',edital:'https://inatel.br/intercambios/documents/edital-universidade-de-cordoba-2026-2.pdf',etapas:['até 21/09','análise do Nesp','divulgação pelo Nesp']}];
 P.forEach(p=>{p.req=REQS;p.desc=`Intercâmbio na ${p.inst} (${p.pais}), com previsão de ${p.per}. Aulas em ${p.idioma.toLowerCase()}. Durante o período, o aluno fica isento das mensalidades no Inatel e na instituição anfitriã, conforme o edital. Passagens, moradia, seguro e visto são por conta do estudante.`});
 let user={nome:'Rafael Moreira Xavier',mat:'786',email:'aluno@inatel.br',curso:'Engenharia de Software',per:'P7'};
-let nespBack='det',tab='p',F={pais:'Todos',area:'',per:'',idi:'',ab:true},fav=new Set(),cur=null,docs={},prot=0;
+let resumeIns=null,nespBack='det',tab='p',F={pais:'Todos',area:'',per:'',idi:'',ab:true},fav=new Set(),cur=null,docs={},prot=0;
 let ins=[{id:5,protocolo:"2026-000087",data:"20/09",status:"Documento pendente",pend:true,
  user:{nome:'Rafael Moreira Xavier',mat:'786',email:'aluno@inatel.br',curso:'Engenharia de Software',per:'P7'},
- docs:[{n:'Formulário de inscrição',name:'formulario.pdf'},{n:'Nada Consta (Tesouraria)',name:'nada-consta.pdf'},{n:'Comprovante de idioma',name:null}]}];
+ docs:[{n:'Formulário de inscrição',name:'formulario.pdf',kb:182},{n:'Nada Consta (Tesouraria)',name:'nada-consta.pdf',kb:96},{n:'Comprovante de idioma',name:null}]}];
 const $=id=>document.getElementById(id);
 const desk=()=>matchMedia('(min-width:900px)').matches;
 function openNesp(fromIns){nespBack=fromIns?'insd':'det';document.getElementById('mailBtn').href='mailto:nesp@inatel.br?subject='+encodeURIComponent('Dúvida sobre o programa '+cur.nome);document.getElementById('nAdr').open=desk();go('nesp')}
@@ -64,7 +64,7 @@ function render(){
  }else if(tab==='f'){
   const r=P.filter(p=>fav.has(p.id));L.innerHTML=r.map(card).join('')||'<div class="empty">Você ainda não salvou programas.<br>Toque em “Salvar” nos detalhes de um programa.</div>';
  }else{
-  L.innerHTML=ins.map(i=>{const p=P.find(x=>x.id===i.id);return `<div class="card ins" style="cursor:default"><div class="top"><div class="t ${p.g}"></div><div><b>${p.nome}</b><small>Protocolo ${i.protocolo}<br>Enviada em ${i.data}</small><span class="badge ${i.pend?'e':'w'}">${i.status}</span></div></div>`+(i.pend?'':`<div class="prog"><div class="d"><i></i>Enviada</div><div class="d"><i></i><b>Em análise</b></div><div><i></i>Resultado</div></div>`)+`<div class="bt ${i.pend?'two':''}">`+(i.pend?`<button class="link" onclick="anexarPend('${i.protocolo}')">Anexar documento</button>`:'')+`<button class="link" onclick="openIns('${i.protocolo}')">Ver detalhes</button></div></div>`}).join('')||'<div class="empty">Nenhuma inscrição ainda.</div>';
+  L.innerHTML=ins.map(i=>{const p=P.find(x=>x.id===i.id);return `<div class="card ins" style="cursor:default"><div class="top"><div class="t ${p.g}"></div><div><b>${p.nome}</b><small>Protocolo ${i.protocolo}<br>Enviada em ${i.data}</small><span class="badge ${i.pend?'e':'w'}">${i.status}</span></div></div>`+(i.pend?'':`<div class="prog"><div class="d"><i></i>Enviada</div><div class="d"><i></i><b>Em análise</b></div><div><i></i>Resultado</div></div>`)+`<div class="bt ${i.pend?'two':''}">`+(i.pend?`<button class="link" onclick="retomar('${i.protocolo}')">Anexar documento</button>`:'')+`<button class="link" onclick="openIns('${i.protocolo}')">Ver detalhes</button></div></div>`}).join('')||'<div class="empty">Nenhuma inscrição ainda.</div>';
  }
 }
 function card(p){return `<button class="card" onclick="openP(${p.id})"><div class="ph ${p.g}"><span class="pais">${p.pais}</span><span class="badge ${p.aberto?'':'c'}">${p.aberto?'Aberto':'Encerrado'}</span></div><div class="cb"><h3>${p.nome}</h3><p>${p.tipo} • ${p.dur}</p></div><div class="cf"><span>${IC.cal}${p.aberto?'Inscrições até '+p.prazo:'Inscrições encerradas'}</span><b>Ver mais <i>${IC.arr}</i></b></div></button>`}
@@ -90,7 +90,7 @@ function chk1(){const v={nome:u_nome.value.trim(),mat:u_mat.value.trim(),email:u
  const E={nome:v.nome.length<3?'Informe seu nome completo.':'',mat:!/^\d+$/.test(v.mat)?'Use apenas números.':'',email:!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email)?'Informe um e-mail válido.':'',curso:!v.curso?'Informe seu curso.':'',per:!v.per?'Informe seu período.':''};
  let ok=true;for(const k in E){const bad=!!E[k];if(bad){ok=false;(['nome','mat','email'].includes(k)?g_pes:g_aca).open=true}$('er_'+k).textContent=E[k];$('u_'+k).classList.toggle('bad',bad)}
  if(ok)user=v;b1.disabled=!(ok&&c1.checked)}
-function iniciar(){docs={};c1.checked=false;b1.disabled=true;c3.checked=false;b3.disabled=true;go('s1')}
+function iniciar(){resumeIns=null;b3.textContent='Confirmar inscrição';s2sub.textContent='PDF ou JPG, até 5 MB';docs={};c1.checked=false;b1.disabled=true;c3.checked=false;b3.disabled=true;go('s1')}
 /* filtros */
 function fillF(){fp.innerHTML=['Todos',...new Set(P.map(p=>p.pais))].map(c=>`<button class="${F.pais===c?'on':''}" onclick="setPais('${c}')">${c}</button>`).join('');fa.value=F.area;fi.value=F.idi;fd.value=F.per;fo.checked=F.ab}
 function setPais(c){F.pais=c;fillF();if(desk())render()}
@@ -109,15 +109,18 @@ function renderSum(){const p=cur;$('sum').innerHTML=`<div class="ticket"><div><s
  +acc('Dados do aluno',`<dl><dt>Aluno</dt><dd>${user.nome} • ${user.mat}</dd><dt>E-mail</dt><dd>${user.email}</dd><dt>Curso</dt><dd>${user.curso} • ${user.per}</dd></dl>`,true)
  +acc('Documentos anexados',`<dl>${REQ.map(([k,n])=>`<dt>${n}</dt><dd>${docs[k]?docs[k].name:'—'}</dd>`).join('')}</dl>`,false,REQ.length)
  +acc('Prazo final',`<b>${p.prazo}</b>`,true)}
-function confirmar(){prot++;const pr='2026-'+String(122+prot).padStart(6,'0');const d=new Date();const dt=String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0');
- ins.unshift({id:cur.id,protocolo:pr,data:dt,status:'Em análise',user:{...user},docs:REQ.map(([k,n])=>({n,name:docs[k]?docs[k].name:null}))});
+function confirmar(){const resumed=resumeIns;let pr;
+ if(resumed){const i=ins.find(x=>x.protocolo===resumed);i.docs=REQ.map(([k,n])=>({n,name:docs[k]?docs[k].name:null,kb:docs[k]?docs[k].kb:0}));i.pend=false;i.status='Em análise';pr=i.protocolo;okT.textContent='Documentos enviados!';okS.textContent='Sua inscrição voltou para análise.';resumeIns=null}
+ else{prot++;pr='2026-'+String(122+prot).padStart(6,'0');const d=new Date();const dt=String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0');okT.textContent='Inscrição enviada!';okS.textContent='Boa sorte na seleção';
+ ins.unshift({id:cur.id,protocolo:pr,data:dt,status:'Em análise',user:{...user},docs:REQ.map(([k,n])=>({n,name:docs[k]?docs[k].name:null,kb:docs[k]?docs[k].kb:0}))})}
  $('pass').innerHTML=`<div class="top"><div class="rt"><span>BRASIL</span><span>${cur.pais.toUpperCase()}</span></div><div>BRA<span class="pl">${IC.pl}</span>${cur.sig}</div><b style="font-size:16px">${cur.nome}</b><br><span class="badge w" style="margin-top:8px">Em análise</span></div><div class="bt"><small style="color:var(--mut);font-weight:700;font-size:10px;letter-spacing:.5px">PROTOCOLO</small><div class="big">${pr}</div><div class="bars"></div><small style="color:var(--mut)">Acompanhe o status em Minhas inscrições</small></div>`;go('ok')}
-function anexarPend(p){const i=ins.find(x=>x.protocolo===p);i.pend=false;i.status='Em análise';i.docs.forEach(d=>{if(!d.name)d.name='comprovante-idioma.pdf'});if(document.getElementById('insd').classList.contains('on'))openIns(p);else render();toast('Documento enviado. Sua inscrição voltou para análise.')}
+function retomar(pr){const i=ins.find(x=>x.protocolo===pr);resumeIns=pr;cur=P.find(x=>x.id===i.id);user={...i.user};docs={};i.docs.forEach((d,k)=>{if(d.name)docs[REQ[k][0]]={name:d.name,kb:d.kb||120}});c3.checked=false;b3.disabled=true;b3.textContent='Enviar documentos';s2sub.textContent='Seus dados e os documentos já enviados foram mantidos. Anexe o que falta para continuar sua inscrição.';go('s2')}
+function back2(){resumeIns?openIns(resumeIns):go('s1')}
 function openIns(pr){const i=ins.find(x=>x.protocolo===pr),p=P.find(x=>x.id===i.id);cur=p;const pend=i.docs.filter(d=>!d.name).map(d=>d.n);
  const tl=`<ul class="tl"><li class="d"><i></i><b>Inscrição enviada</b><small>${i.data} • protocolo ${i.protocolo}</small></li>`+(i.pend?`<li class="w"><i></i><b>Documento pendente</b><small>Falta enviar: ${pend.join(', ')}. A análise continua após o envio.</small></li>`:`<li class="d now"><i></i><b>Em análise pelo Nesp</b><small>Seu pedido está sendo analisado.</small></li>`)+`<li><i></i><b>Resultado</b><small>Será divulgado pelo Nesp.</small></li></ul>`;
  $('insd-body').innerHTML=`<div class="igrid"><div style="min-width:0">
   <div class="pass" style="margin:0 0 16px;max-width:none"><div class="top"><div class="rt"><span>BRASIL</span><span>${p.pais.toUpperCase()}</span></div><div>BRA<span class="pl">${IC.pl}</span>${p.sig}</div><b style="font-size:16px">${p.inst}</b><br><span class="badge ${i.pend?'e':'w'}" style="margin-top:8px">${i.status}</span></div><div class="bt"><small style="color:var(--mut);font-weight:700;font-size:11px;letter-spacing:.5px">PROTOCOLO</small><div class="big">${i.protocolo}</div><small style="color:var(--mut)">Enviada em ${i.data}</small></div></div>
-  ${i.pend?`<div class="alert"><b>Ação necessária</b><span>Envie: ${pend.join(', ')}.</span><button class="btn" onclick="anexarPend('${i.protocolo}')">Anexar documento</button></div>`:''}
+  ${i.pend?`<div class="alert"><b>Ação necessária</b><span>Envie: ${pend.join(', ')}.</span><button class="btn" onclick="retomar('${i.protocolo}')">Continuar inscrição</button></div>`:''}
   <h4 style="margin:6px 0 10px">Acompanhamento</h4>${tl}</div>
   <div style="min-width:0">
   ${acc('Dados do aluno',`<dl class="dl"><dt>Aluno</dt><dd>${i.user.nome} • ${i.user.mat}</dd><dt>E-mail</dt><dd>${i.user.email}</dd><dt>Curso</dt><dd>${i.user.curso} • ${i.user.per}</dd></dl>`,true)}

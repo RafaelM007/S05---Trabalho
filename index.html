@@ -85,13 +85,13 @@
 </section>
 
 <section class="scr" id="s2">
-  <div class="bar"><button class="back" onclick="go('s1')" aria-label="Voltar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M15 5l-7 7 7 7"/></svg></button>Inscrição</div>
+  <div class="bar"><button class="back" onclick="back2()" aria-label="Voltar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M15 5l-7 7 7 7"/></svg></button>Inscrição</div>
   <div class="body"><div class="wgrid">
     <div class="ws"><div class="wz"><div class="d"><i>✓</i>Dados</div><div class="a"><i>2</i>Documentos</div><div><i>3</i>Confirmar</div></div></div>
     <aside class="wa minis"></aside>
-    <div class="wm"><h2 class="wh">Anexe os documentos</h2><small class="wsub">PDF ou JPG, até 5 MB</small>
+    <div class="wm"><h2 class="wh">Anexe os documentos</h2><small class="wsub" id="s2sub">PDF ou JPG, até 5 MB</small>
       <div class="dgr" id="docs"></div><div class="cnt" id="cnt"></div></div></div></div>
-  <div class="foot"><div class="row"><button class="btn o" onclick="go('s1')">Voltar</button><button class="btn" id="b2" disabled onclick="go('s3')">Continuar</button></div></div>
+  <div class="foot"><div class="row"><button class="btn o" onclick="back2()">Voltar</button><button class="btn" id="b2" disabled onclick="go('s3')">Continuar</button></div></div>
 </section>
 
 <section class="scr" id="s3">
@@ -136,7 +136,7 @@
     <div class="ok"><div class="conf" id="conf"></div>
       <svg class="plane" viewBox="0 0 240 90" fill="none"><path d="M10 52c40-6 90-14 150-22 30-4 60-2 66 6 4 6-10 12-30 14-40 6-100 16-150 22-20 2-30-4-36-20z" fill="#eef3fa"/><path d="M95 40l-38-28h22l54 22zM110 56l-30 28h20l42-26z" fill="#c9d6e8"/><path d="M200 34l22-26h-16l-16 24z" fill="#9fb5d3"/><rect x="60" y="38" width="90" height="5" rx="2" fill="#0b63c5" opacity=".5"/></svg>
       <div class="tk"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5"><path d="M5 12l5 5 9-10"/></svg></div>
-      <h2>Inscrição enviada!</h2><p>Boa sorte na seleção</p></div>
+      <h2 id="okT">Inscrição enviada!</h2><p id="okS">Boa sorte na seleção</p></div>
     <div class="body okb" style="flex:none;overflow:visible"><div class="pass" id="pass"></div></div>
   </div>
   <div class="foot c"><button class="btn" onclick="tab='i';go('explore')">Ver minhas inscrições</button><button class="link" onclick="go('menu')">Voltar ao início</button></div>
